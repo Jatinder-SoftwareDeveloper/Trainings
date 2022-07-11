@@ -1,0 +1,123 @@
+
+1=> Install Xammp with php 8.1
+2=> Composer
+3:=> Download Elasticsearch 7.16.3 and extract it to xampp\htdocs\ folder
+4=> run elastisearch file from xampp\htdocs\elasticsearch-7.16.3\bin\ elastisearch.bat
+5=> Download Magento from https://test.pennep.com/magento/magento2.zip.
+
+Extract it and move to C:/xampp/htdocs/.
+
+or using composer use the command from the folder in which magento to be installed =>
+follow this link for composer install https://devdocs.magento.com/guides/v2.4/install-gde/composer.html
+c:\xampp8\htdocs\newfoldername\> composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition ./
+
+6=>
+============================================
+change the contents of php.ini file from Xampp control panel Apache configu button 
+
+;extension=gd
+;extension=intl
+;extension=soap
+;extension=xsl
+;extension=sockets
+;extension=sodium
+Remove ; from the above lines of php.ini file. Save the file.
+
+Update following values:
+max_execution_time=18000
+max_input_time=18000
+memory_limit=4G
+===========================
+7:=> 
+========================
+Server Configuration:
+We need to set document root to pub, to do this go to file
+C:\xampp\apache\conf\extra\httpd-vhosts.conf
+Add below text to httpd-vhosts.conf file.
+
+
+<VirtualHost *:80>
+  DocumentRoot "C:/xampp/htdocs/magento2/pub"
+  ServerName try.localhost.com
+</VirtualHost>
+<VirtualHost *:80>
+  DocumentRoot "C:/xampp/htdocs"
+  ServerName localhost
+</VirtualHost>
+=============================
+8=>
+=============================================
+Now, Open notepad with “Run as administrator”.
+lets open C:\Windows\System32\drivers\etc\hosts file in notepad and add the below line at the bottom of the file.
+
+127.0.0.1  try.localhost.com
+=================================
+9=>
+=====================================
+By default, Xampp does not set a password for MYSQL, so we will need to create a new root password for mysql.
+On Xampp, click on Shell button to open command interface than run the below command
+mysqladmin.exe -u root password root
+
+
+
+Now, open config.inc.php, To update the phpmyadmin password.
+By default, the password field is empty.
+Update password to 'root'.
+===========
+10=>
+
+Create database for magento, Click on Admin button
+
+Write the database name and click on create.
+=======================
+11=>
+Now, open terminal in “C:/xampp/htdocs/magento2” directory. 
+
+To setup magento,
+
+
+composer install
+composer global require "squizlabs/php_codesniffer=*"
+=======================
+12 =>
+Edit the bellow 3 files.
+
+Go to: vendor\magento\framework\Image\Adapter\Gd2.php file. at line 92.
+
+13=>
+Only change is && !file_exists($filename) text added at line 96.
+
+Now, do the following:-
+
+Remove semicolon from the beginning of the line ;extension=sodium from php.ini which enables it.
+
+Copy \xampp\php\libsodium.dll to  xampp\apache\bin\
+
+Restart Apache means stop and start Apache.
+
+14 
+=================
+Go to: D:\xampp\htdocs\magento2\vendor\magento\framework\View\Element\Template\File
+
+Only change text to if (0 === strpos($path, $directory)) { 
+instead of if (0 === strpos($realPath, $directory)) {
+========================
+
+15
+============
+Go to: D:\xampp\htdocs\magento2\app/etc/di.xml
+line number 756 & 757
+– Find the text “Magento\Framework\App\View\Asset\MaterializationStrategy\Symlink” and replace to “Magento\Framework\App\View\Asset\MaterializationStrategy\Copy”
+
+Save the file.
+============
+16=>
+To connect to database, run this command (It will take time):
+php bin/magento setup:install --base-url="http://test.mega.com/" --db-host="localhost" --db-name="mag" --db-user="root" --db-password="root" --admin-firstname="admin" --admin-lastname="admin" --admin-email="user@example.com" --admin-user="admin" --admin-password="Admin@123456" --language="en_US" --currency="USD" --timezone="America/Chicago" --use-rewrites="1" --backend-frontname="admin" --search-engine=elasticsearch7 --elasticsearch-host="localhost" --elasticsearch-port=9200
+====================
+php bin/magento indexer:reindex
+php bin/magento setup:upgrade
+php bin/magento setup:static-content:deploy -f
+php bin/magento cache:flush
+php bin/magento module:disable Magento_TwoFactorAuth
+
