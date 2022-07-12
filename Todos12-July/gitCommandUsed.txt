@@ -1,0 +1,18 @@
+Create files and folder in the Git repository folder.
+
+command 1 => 
+        git add *
+        purpose => command is used to take all files folders created on storage area
+command 2 =>
+        git commit -m "mess" 
+        Purpose=> command used to save the new files folder in git file System
+Command 3 => 
+        git checkout myLearning
+        purpose => Command will switch to the branch from main to myLearning
+Command 4 => 
+        git log 
+        purpose => Will show or check the log of every commit in repository 
+Command 5 => 
+        git status 
+        Purpose => will show the information of repository regarding if brances are uptodate etc.
+
