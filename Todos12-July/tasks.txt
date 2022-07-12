@@ -1,0 +1,12 @@
+# GIT REPOSITORIES
+Practice git commands
+ Create files, subdirectries 
+ push or send to git remote
+ create sub branches and switch into them
+  view the logs 
+
+# MAGENTO ADMIN PANEL
+    Create Menubar , Pages , Themes
+    Change logo
+    Create add widgets
+    
